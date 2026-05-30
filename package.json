@@ -1,8 +1,16 @@
 {
   "name": "cron-raels",
   "version": "1.0.0",
+  "description": "Rael_Kertia Cron Monitor - F1+F3+F4 Engine",
   "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'No build step needed'"
+  },
   "dependencies": {
     "@supabase/supabase-js": "^2.45.0"
+  },
+  "engines": {
+    "node": "18.x"
   }
 }
