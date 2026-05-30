@@ -1,10 +1,13 @@
-name: Cron Monitor F1
+name: Ping Cron Monitor
+
 on:
   schedule:
-    - cron: '* * * * *' # Runs every minute
+    - cron: '* * * * *'
+  workflow_dispatch:
+
 jobs:
-  check:
+  ping:
     runs-on: ubuntu-latest
     steps:
-      - name: Hit F1 check endpoint
+      - name: Ping API
         run: curl https://cron-raels.vercel.app/api/check
