@@ -1,0 +1,10 @@
+name: Cron Monitor F1
+on:
+  schedule:
+    - cron: '* * * * *' # Runs every minute
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hit F1 check endpoint
+        run: curl https://cron-raels.vercel.app/api/check
