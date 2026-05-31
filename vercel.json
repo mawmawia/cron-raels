@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/ping/dcb64909-d96a-46bc-875c-ceaa5dbbcc35",
+      "schedule": "0 * * * *"
+    }
+  ]
+}
