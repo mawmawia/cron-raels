@@ -15,7 +15,7 @@ export default async function handler(req, res) {
   if (!supabaseUrl || !supabaseKey) {
     return res.status(500).json({
       error: 'Server configuration error',
-      details: 'supabaseKey is required.'
+      details: 'Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY'
     })
   }
 
@@ -38,15 +38,12 @@ export default async function handler(req, res) {
       .eq('id', id)
       .single()
 
-    if (dbError) {
+    if (dbError || !job) {
       return res.status(404).json({ 
         error: 'Job not found', 
-        details: dbError.message 
+        job_id: id,
+        details: dbError?.message || 'No job with that ID'
       })
-    }
-
-    if (!job) {
-      return res.status(404).json({ error: 'Job not found' })
     }
 
     // 6. Fire the webhook
@@ -64,13 +61,14 @@ export default async function handler(req, res) {
       })
     })
 
-    // 7. Check if webhook failed
+    // 7. Check if webhook failed - now shows the URL that failed
     if (!webhookResponse.ok) {
       const text = await webhookResponse.text()
-      return res.status(500).json({
-        error: 'Webhook failed',
+      return res.status(502).json({
+        error: 'Webhook request failed',
         status: webhookResponse.status,
-        details: text.slice(0, 200)
+        webhook_url: job.webhook_url, // ← This tells you exactly which URL 404'd
+        details: text.slice(0, 300)
       })
     }
 
@@ -85,6 +83,7 @@ export default async function handler(req, res) {
       ok: true,
       message: 'Webhook sent successfully',
       job: job.name,
+      job_id: job.id,
       timestamp: new Date().toISOString()
     })
 
